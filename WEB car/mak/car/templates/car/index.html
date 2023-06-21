@@ -1,24 +1,33 @@
-
 {% extends 'car/base.html' %}
 
 {% block content %}
 <ul class="list-articles">
-	{% for p in posts %}
-			<li><div class="article-panel">
-	<p class="first">Категория: {{p.cat}}</p>
-</div>
+    {% for p in posts %}
+        <li>
+            <div class="article-panel">
+                <p class="first">Категория: {{ p.cat }}</p>
+            </div>
 
-{% if p.photo %}
-	<p><img class="img-article-left thumb" src="{{p.photo.url}}"></p>
-{% endif %}
+            {% if p.photo %}
+                <p><img class="img-article-left thumb" src="{{ p.photo.url }}"></p>
+            {% endif %}
 
-				<h2>{{p.title}}</h2>
-	{% autoescape on %}
-	{{p.content|linebreaks|truncatewords:50}}
-	{% endautoescape %}
-			<div class="clear"></div>
-			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Читать описание</a></p>
-			</li>
-	{% endfor %}
+            <h2>{{ p.title }}</h2>
+            {% autoescape on %}
+                {{ p.content|linebreaks|truncatewords:50 }}
+            {% endautoescape %}
+            <p class="link-read-post">
+                Цена
+            </p>
+            <div class="button-container">
+                <p class="link-read-post bottom-left">
+                    <a href="{{ p.get_absolute_url }}">В избранное</a>
+                </p>
+                <p class="link-read-post bottom-right">
+                    <a href="{{ p.get_absolute_url }}">Читать описание</a>
+                </p>
+            </div>
+        </li>
+    {% endfor %}
 </ul>
 {% endblock %}

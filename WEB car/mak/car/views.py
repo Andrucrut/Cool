@@ -3,14 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse,HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound
 from django.urls import reverse_lazy
-from django.views.generic import ListView,DetailView,CreateView
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 from .models import *
 from .utils import *
+
 
 class CarsHome(DataMixin, ListView):
     paginate_by = 3
@@ -43,7 +44,7 @@ def about(request):
     return render(request, 'car/about.html', {'menu': menu, 'title': 'О сайте'})
 
 
-class AddPage(LoginRequiredMixin,DataMixin,CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'car/addpage.html'
     success_url = reverse_lazy('home')
@@ -55,6 +56,7 @@ class AddPage(LoginRequiredMixin,DataMixin,CreateView):
         c_def = self.get_user_context(title="Добавление статьи")
         context = dict(list(context.items()) + list(c_def.items()))
         return context
+
 
 '''def addpage(request):
     if request.method == 'POST':
@@ -69,14 +71,16 @@ class AddPage(LoginRequiredMixin,DataMixin,CreateView):
 '''def login(request):
     return HttpResponse("Авторизация")'''
 
-def contact(request):
-    return render(request,"car/contack.html",{'title': "Обратная связь"})
 
-def pageNotFound(request,exception):
+def contact(request):
+    return render(request, "car/contack.html", {'title': "Обратная связь"})
+
+
+def pageNotFound(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
 
 
-class ShowPost(DataMixin,DetailView):
+class ShowPost(DataMixin, DetailView):
     model = Cars
     template_name = 'car/post.html'
     slug_url_kwarg = 'post_slug'
@@ -86,6 +90,7 @@ class ShowPost(DataMixin,DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title=context['post'])
         return dict(list(context.items()) + list(c_def.items()))
+
 
 '''def show_post(request, post_id):
     post = get_object_or_404(Cars, pk=post_id) #pk = первичный ключ   get= находит пост с ключом, если нет то 404
@@ -100,7 +105,7 @@ class ShowPost(DataMixin,DetailView):
     return render(request, 'car/post.html', context=context)'''
 
 
-class CarsCategory(DataMixin,ListView):
+class CarsCategory(DataMixin, ListView):
     model = Cars
     template_name = 'car/index.html'
     context_object_name = 'posts'
@@ -116,6 +121,7 @@ class CarsCategory(DataMixin,ListView):
 
         return dict(list(context.items()) + list(c_def.items()))
 
+
 '''def show_category(request, cat_id):
     posts = Cars.objects.filter(cat_id=cat_id)
 
@@ -128,8 +134,6 @@ class CarsCategory(DataMixin,ListView):
     }
 
     return render(request, 'car/index.html', context=context)'''
-
-
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -164,3 +168,22 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+class Favorites(DataMixin, ListView):
+    model = Cars
+    template_name = 'car/index.html'
+    context_object_name = 'posts'
+    allow_empty = False
+
+    def get_queryset(self):
+        try:
+            return Cars.objects.filter(is_favorite=True)
+        except ValueError:
+            return ListView
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Избранное', cat_selected=context['posts'][0].cat_id)
+
+        return dict(list(context.items()) + list(c_def.items()))

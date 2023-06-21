@@ -428,3 +428,18 @@ ul.lang-list li a:hover {color: #fdc073;}
 .list-pages .page-num-selected:hover {
 	box-shadow: none;
 }
+.button-container {
+    position: relative;
+}
+
+.link-read-post.top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.link-read-post.bottom-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
