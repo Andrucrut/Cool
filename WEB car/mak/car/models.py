@@ -12,6 +12,7 @@ class Cars(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True, verbose_name="публикация")
     is_favorite = models.BooleanField(default=False)
+    cost = models.TextField(default="1000000")
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, verbose_name="Категории", )
 
     def __str__(self):

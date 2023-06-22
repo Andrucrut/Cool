@@ -17,14 +17,14 @@
                 {{ p.content|linebreaks|truncatewords:50 }}
             {% endautoescape %}
             <p class="link-read-post">
-                Цена
+
             </p>
             <div class="button-container">
+                <p class="link-read-post bottom-right">
+                    <a href="{{ p.get_absolute_url }}">Узнать подробнеее</a>
+                </p>
                 <p class="link-read-post bottom-left">
                     <a href="{{ p.get_absolute_url }}">В избранное</a>
-                </p>
-                <p class="link-read-post bottom-right">
-                    <a href="{{ p.get_absolute_url }}">Читать описание</a>
                 </p>
             </div>
         </li>
